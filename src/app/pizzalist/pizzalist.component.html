@@ -1,0 +1,142 @@
+
+<h2 style="text-align: center">Grab some of our pizzas</h2>
+
+<!--            left column with all the pizza tiles                    -->
+<div class="col-9">
+<mat-tab-group dynamicHeight  [(selectedIndex)]="selectedTab">
+  <mat-tab label="Our menu">
+    <div class="example-small-box mat-elevation-z4">
+      <div class="card" fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.5%" fxLayoutAlign="right">
+        <div *ngFor="let val of pizzas">
+          <div >
+            <mat-card>
+              <mat-card-header class="card, moveimage">
+                <div mat-card-avatar class="avatar-image"></div>
+                <mat-card-title>{{val.name}}</mat-card-title>
+                <mat-card-subtitle>No {{val.id}} of our famous pizzas</mat-card-subtitle>
+              </mat-card-header>
+              <img mat-card-image class="img" src={{val.image}} alt="Our famous pizza {{val.name}}">
+              <mat-card-content>
+<!-- ingredients -->
+              <div style="display: inline-flex">
+                <span *ngFor="let ingredient of val.ingredients">
+                  <mat-chip-list>
+                    <mat-chip>{{ingredient}}</mat-chip>
+                  </mat-chip-list>
+                </span>
+              </div>
+<!-- base selector -->
+                <div style="display: flex; flex-direction: column;">
+                <mat-form-field>
+                    <mat-select  [(ngModel)]="val.base" >
+                        <mat-option *ngFor="let val of bases" value="{{val}}" (click) = "onSelect(val)">{{val}}</mat-option>
+                    </mat-select>
+                    <mat-hint align="end">Or choose your own base</mat-hint>
+                  </mat-form-field>
+                </div>
+<!-- end of base selector -->
+              </mat-card-content>
+              <mat-card-actions>
+                <input class="btn" type="submit" value="Add to cart" *ngIf="val.price" (click)="addToCart(val)" />
+                <span style="float:right; width: 20%;">{{val.price}}$</span>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <div>
+        <p>More information about us
+          <a routerLink="/information" class="link">here</a>
+        </p>
+      </div>
+    </footer>
+  </mat-tab>
+  <!--          end of  left column with all the pizza tiles                -->
+
+  <!--          configure your own pizzas                                   -->
+  <mat-tab label="Configure your own">
+    <div class="example-large-box mat-elevation-z4">
+      <div>
+        <h2 style="text-align: center">Create your own pizza</h2>
+        <form (ngSubmit)="handleSubmit()">
+          <p>You can choose four of our delicious toppings</p>
+          <mat-select *ngFor="let val of pizza.ingredients; let i = index;" [(ngModel)]="pizza.ingredients[i].name" name="toppingType{{i}}"
+            (change)="addTopping(i)" [ngModelOptions]="{standalone: true}" placeholder="Topping {{i+1}}">
+            <mat-option *ngFor="let val of toppings" value="{{val}}">{{val}}</mat-option>
+            <hr>
+          </mat-select>
+          <br>
+          <p> Choose the base of your pizza </p>
+          <select name="baseType" [(ngModel)]="pizza.base">
+            <option *ngFor="let val of bases; let i index" value="{{val}}">{{val}}</option>
+          </select>
+          <mat-form-field class="example-full-width">
+            <input [(ngModel)]="pizza.name" matInput placeholder="Name your pizza" required [ngModelOptions]="{standalone: true}">
+          </mat-form-field>
+          <div *ngFor="let val of pizza.ingredients">
+            {{val.name}}
+          </div>
+          <input  type="submit" class="btn" value="Add Pizza" *ngIf="!pizza.id" routerLink="/pizzalist" />
+          <input type="submit" class="btn" value="Edit Pizza" *ngIf="pizza.id" />
+          <br>
+          <p>After adding your pizza you can find it in our menu</p>
+        </form>
+        <br>
+        <br>
+        <br>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Messages">
+      <app-messages></app-messages>
+  </mat-tab>
+</mat-tab-group>
+</div>
+<!--                     right Shopping cart column                      -->
+<div class="column">
+        <div class="myorder">
+          <br>
+          <br>
+          <br>
+          <br>
+<!--                    display pizzas number + name                     -->
+
+<table mat-table [dataSource]="data" class="mat-elevation-z8" *ngIf="shoppingService.numberOfItemsToBeOrdered >= 1">
+  <!-- number column -->
+          <ng-container matColumnDef="numberOfPizzas">
+            <th mat-header-cell *matHeaderCellDef>Qty.</th>
+            <td mat-cell *matCellDef="let element" >{{ element.numberOfPizzas }}</td>
+          </ng-container>
+  <!-- name column -->
+          <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element">{{element.name}} ({{element.base}})</td>
+          </ng-container>
+ <!-- delete column-->
+          <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-icon-button>
+                <i class="material-icons md-light" (click)="removeFromCart(element)">delete</i>
+              </button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<!--             end of display pizzas number + name                     -->
+          <br>
+          <div style="font-weight: bold" *ngIf="shoppingService.total">
+              Total value: {{shoppingService.total}}$
+              <br>
+              <button class="btn btn-outline-primary mb-2 mr-2" (click)="openDialog()">Place Order</button>
+              <hr>
+              <pre>{{closeResult}}</pre>
+            </div>
+        </div>
+</div>
+
+

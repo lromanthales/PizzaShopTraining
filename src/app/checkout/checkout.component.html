@@ -1,0 +1,81 @@
+<!-- modal window for shopping cart-->
+<div class="modal-header">
+    <h4 class="modal-title">Shopping Cart</h4>
+    <button type="button" class="close" aria-label="Close" [mat-dialog-close]="">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+        <p style="text-align: center"> Insert delivery details:</p>
+          <mat-vertical-stepper [linear]="true" #stepper>
+            <mat-step [completed]="false" [stepControl]="firstFormGroup">
+              <form [formGroup]="firstFormGroup">
+                <ng-template matStepLabel>Fill out your name</ng-template>
+                <mat-form-field>
+                  <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required [(ngModel)]="shoppingService.name">
+                </mat-form-field>
+                <div>
+                  <button mat-button matStepperNext>Next</button>
+                </div>
+              </form>
+            </mat-step>
+            <mat-step [completed]="false" [stepControl]="secondFormGroup">
+              <form [formGroup]="secondFormGroup">
+                <ng-template matStepLabel>Fill out your address</ng-template>
+                <mat-form-field>
+                  <input matInput placeholder="Address" formControlName="secondCtrl" required [(ngModel)]="shoppingService.address">
+                </mat-form-field>
+                <div>
+                  <button mat-button matStepperPrevious>Back</button>
+                  <button mat-button matStepperNext>Next</button>
+                </div>
+              </form>
+            </mat-step>
+            <mat-step [completed]="false" [stepControl]="thirdFormGroup">
+              <form [formGroup]="thirdFormGroup">
+              <ng-template matStepLabel>Delivery date</ng-template>
+              <mat-form-field>
+                <input matInput formControlName="thirdCtrl" [matDatepicker]="picker" matInput [min]="minDate" [max]="maxDate" placeholder="Choose a date" [(ngModel)]="shoppingService.deliveryDate">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              <div>
+                  <button mat-button matStepperPrevious>Back</button>
+                  <button mat-button matStepperNext>Next</button>
+              </div>
+            </form>
+            </mat-step>
+            <mat-step [completed]="false">
+                <ng-template matStepLabel>Order</ng-template>
+                Details inserted. You can now order.
+                <div>
+                    <button mat-button matStepperPrevious>Review details</button>
+                    <button mat-button (click)="stepper.reset()">Reset Details</button>
+                    <button type="button" class="btn btn-light" (click)="cartService.CreateOrder()" [mat-dialog-close]="" routerLink="/thankyou">Order</button>
+                </div>
+              </mat-step>
+          </mat-vertical-stepper>
+        <br>
+        <div><hr></div>
+        <div class="modal-body">
+            <p style="text-align: center"> Your order summary:</p>
+            <div *ngFor="let i of shoppingService.PizzasToBeOrdered">
+                <ul>
+                  <span style="float: left; width: 70%;margin-right: 10%">
+                  <span class="numberBadge">{{i.numberOfPizzas}}</span>
+                  <p >{{i.name}}</p></span>
+                  <p style="float:right; width: 20%;">Value: {{i.price * i.numberOfPizzas}}</p>
+                </ul>
+            </div>
+            <div style="float: left; width: 20%;">
+              <br>
+              <br>
+                <p>Name: {{shoppingService.name}}</p>
+                <p>Address: {{shoppingService.address}}</p>
+              </div>
+            <p style="float:right; width: 20%; font-weight: bold; align-self: right;">Total value: {{shoppingService.total}}</p>
+        </div>
+        <br>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" [mat-dialog-close]="" >Cancel</button>
+  </div>
+<!--end modal window for shopping cart-->
