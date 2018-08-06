@@ -1,0 +1,33 @@
+
+ <div class="header">
+  <span>
+    <div style="display: flex; justify-content: center;">
+      <img src="../../assets/logo200px.png">
+    </div>
+  </span>
+</div>
+<!--                    toolbar                                         -->
+ <mat-toolbar>
+    <button routerLink="">
+    <i class="material-icons md-light">home</i>
+  </button>
+    <span style="flex: 1 auto;"></span>
+    <button mat-icon-button (click)="openDialog()">
+        <i class="material-icons md-light">shopping_cart</i> ({{data.numberOfItemsToBeOrdered}})
+    </button>
+  </mat-toolbar>
+
+<router-outlet> </router-outlet> 
+
+<!-- <div class="container-fluid">
+    <div style="color: blue;">
+      <h1>{{title}}</h1>
+      <h3>{{description}}</h3>
+    </div>
+   
+    <nav>
+      <a routerLink="customers" class="btn btn-primary active" role="button" routerLinkActive="active">Customers</a>
+      <a routerLink="add" class="btn btn-primary active" role="button" routerLinkActive="active">Add</a>
+    </nav>
+    <router-outlet></router-outlet>
+  </div> -->
